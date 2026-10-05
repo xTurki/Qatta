@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="القطّة">
+<meta name="theme-color" content="#0f766e">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>القطّة</title>
+<style>
+:root{
+  --bg:#f3f5f4;--card:#ffffff;--text:#16211f;--muted:#6b7775;--line:#e3e8e6;
+  --brand:#0f766e;--brand-soft:#d9f0ec;--green:#15803d;--green-soft:#dcfce7;
+  --red:#b91c1c;--red-soft:#fee2e2;--amber:#b45309;--amber-soft:#fef3c7;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0d1312;--card:#172120;--text:#e8efed;--muted:#93a29f;--line:#26332f;
+  --brand:#2dd4bf;--brand-soft:#123a35;--green:#4ade80;--green-soft:#123222;
+  --red:#f87171;--red-soft:#3a1717;--amber:#fbbf24;--amber-soft:#3a2c10;
+}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Arabic","Geeza Pro",Tahoma,sans-serif;font-size:16px}
+body{padding:env(safe-area-inset-top) 0 calc(env(safe-area-inset-bottom) + 90px)}
+.wrap{max-width:560px;margin:0 auto;padding:12px 16px}
+header.top{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 0 12px}
+h1{font-size:30px;margin:0;font-weight:800}
+h2{font-size:18px;margin:0 0 10px}
+.muted{color:var(--muted);font-size:14px}
+.tabs{display:flex;background:var(--line);border-radius:12px;padding:3px;margin-bottom:14px}
+.tabs button{flex:1;border:0;background:transparent;padding:9px;border-radius:10px;font:inherit;color:var(--muted);font-weight:600}
+.tabs button.on{background:var(--card);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.card{background:var(--card);border-radius:16px;padding:14px;margin-bottom:12px;border:1px solid var(--line)}
+.trip{display:flex;justify-content:space-between;align-items:center;gap:10px;cursor:pointer}
+.trip .name{font-weight:700;font-size:17px}
+.trip .amt{font-weight:800;color:var(--brand);white-space:nowrap}
+.badge{display:inline-block;font-size:12px;padding:2px 8px;border-radius:99px;background:var(--amber-soft);color:var(--amber);margin-inline-start:6px}
+.badge.ok{background:var(--green-soft);color:var(--green)}
+.empty{text-align:center;padding:40px 10px;color:var(--muted)}
+.empty .big{font-size:44px}
+button{font:inherit}
+.btn{border:0;border-radius:12px;padding:12px 14px;font-weight:700;background:var(--brand);color:#fff;cursor:pointer}
+@media (prefers-color-scheme:dark){.btn{color:#04201c}}
+.btn.ghost{background:var(--brand-soft);color:var(--brand)}
+.btn.danger{background:var(--red-soft);color:var(--red)}
+.btn.block{width:100%}
+.btn.sm{padding:8px 10px;font-size:14px}
+.fab{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom) + 18px);
+  padding:15px 26px;border-radius:99px;box-shadow:0 6px 20px rgba(15,118,110,.35);font-size:17px;z-index:5}
+.icon-btn{border:0;background:transparent;color:var(--brand);font-size:16px;font-weight:600;padding:6px 0;cursor:pointer}
+input{font:inherit;color:var(--text);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%;outline:none}
+input:focus{border-color:var(--brand)}
+.title-in{font-size:22px;font-weight:800;background:transparent;border:0;padding:4px 0;border-bottom:1px dashed var(--line);border-radius:0}
+.row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.row .n{flex:1.4}.row .p{flex:1;text-align:left;direction:ltr}
+.del{border:0;background:var(--red-soft);color:var(--red);width:38px;height:38px;border-radius:10px;font-size:18px;flex:none;cursor:pointer}
+.cols{display:flex;gap:8px;font-size:13px;color:var(--muted);margin-bottom:6px;padding:0 2px}
+.cols .n{flex:1.4}.cols .p{flex:1}.cols .g{width:48px;text-align:center}.cols .x{width:38px}
+.gbtn{border:1px solid var(--line);background:transparent;color:var(--muted);height:38px;width:48px;border-radius:10px;font-size:13px;font-weight:700;flex:none;cursor:pointer;padding:0}
+.gbtn.on{background:var(--amber-soft);color:var(--amber);border-color:transparent}
+.row.is-guest .n{color:var(--amber)}
+.check{display:flex;align-items:center;gap:10px;font-weight:700;cursor:pointer}
+.check input{width:22px;height:22px;accent-color:var(--brand);flex:none;margin:0}
+select{font:inherit;color:var(--text);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%;-webkit-appearance:none;appearance:none}
+.field{margin-top:10px}.field label{display:block;font-size:13px;color:var(--muted);margin-bottom:4px}
+.acc{display:flex;gap:8px;align-items:center;background:var(--bg);border-radius:12px;padding:10px 12px;margin:4px 0 8px}
+.acc code{flex:1;direction:ltr;text-align:left;font-size:15px;word-break:break-all;font-family:ui-monospace,Menlo,monospace}
+.pill.guest{background:var(--amber-soft);color:var(--amber)}
+.tag{font-size:12px;color:var(--brand);background:var(--brand-soft);border-radius:99px;padding:1px 7px;margin-inline-start:4px;font-weight:600}
+.sum{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.sum div{background:var(--bg);border-radius:12px;padding:10px;text-align:center}
+.sum b{display:block;font-size:18px;margin-top:2px}
+.res{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.res:first-of-type{border-top:0}
+.pill{font-weight:700;font-size:14px;padding:5px 10px;border-radius:99px;white-space:nowrap}
+.pill.plus{background:var(--green-soft);color:var(--green)}
+.pill.minus{background:var(--red-soft);color:var(--red)}
+.pill.zero{background:var(--line);color:var(--muted)}
+.tr{padding:8px 0;border-top:1px solid var(--line);font-size:15px}
+.tr:first-child{border-top:0}
+.stale{background:var(--amber-soft);color:var(--amber);border-radius:12px;padding:10px 12px;margin-bottom:10px;font-size:14px;font-weight:600}
+.res-card.is-stale .body{opacity:.45}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.toast{position:fixed;top:calc(env(safe-area-inset-top) + 12px);left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);
+  padding:10px 16px;border-radius:99px;font-size:14px;opacity:0;transition:.25s;pointer-events:none;z-index:9}
+.toast.show{opacity:1}
+.foot{display:flex;gap:8px;justify-content:center;margin-top:18px}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<div class="toast" id="toast"></div>
+<input type="file" id="importFile" accept="application/json,.json" hidden>
+<script>
+const KEY = 'qatta-v1';
+const CUR = 'ر.س';
+let state = load();
+let view = { name: 'home', tab: 'active' };
+
+function load(){ try{ return JSON.parse(localStorage.getItem(KEY)) || {trips:[]}; }catch(e){ return {trips:[]}; } }
+function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function num(v){
+  if (v == null) return 0;
+  v = String(v).replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d))
+               .replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
+               .replace(/٫/g,'.').replace(/[,٬\s]/g,'').replace(/[^\d.]/g,'');
+  const n = parseFloat(v); return isFinite(n) ? n : 0;
+}
+const r2 = n => Math.round(n*100)/100;
+const fmt = n => r2(n).toLocaleString('en-US',{maximumFractionDigits:2});
+const money = n => fmt(n) + ' ' + CUR;
+const today = () => new Date().toISOString().slice(0,10);
+const trip = id => state.trips.find(t => t.id === id);
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),1800); }
+
+/* ---------- الحساب ---------- */
+const settle = t => {
+  const s = (t.settle = t.settle || {mode:'direct', manager:''});
+  // ترحيل من النسخة السابقة: إذا الحقل القديم آيبان ننقله لخانة الآيبان
+  if (!s.v3){ if (s.account && /^\s*SA/i.test(s.account) && !s.iban){ s.iban = s.account; s.account = ''; } s.v3 = 1; }
+  return s;
+};
+const METHODS = [
+  {k:'phone',   label:'رقم الجوال',  icon:'📱', ph:'05xxxxxxxx',                     im:'tel'},
+  {k:'account', label:'رقم الحساب',  icon:'🔢', ph:'رقم الحساب البنكي',               im:'numeric'},
+  {k:'iban',    label:'الآيبان',     icon:'🏦', ph:'SA00 0000 0000 0000 0000 0000',   im:'text'},
+];
+const methods = t => METHODS.map(m => ({...m, v:(settle(t)[m.k]||'').trim()})).filter(m => m.v);
+const sig = t => { const s = settle(t); return JSON.stringify([
+  t.members.filter(m=>m.name.trim()).map(m=>[m.name.trim(), num(m.paid), !!m.guest]),
+  s.mode, s.mode==='manager' ? s.manager : '' ]); };
+function calc(t){
+  const ms = t.members.filter(m => m.name.trim());
+  const sharers = ms.filter(m => !m.guest);
+  // الإجمالي يشمل اللي دفعه الضيوف (يرجع لهم كامل) ويتقسم على غير الضيوف فقط
+  // الحساب كله بالهللات (أعداد صحيحة) عشان ما تضيع هللة بالتقريب
+  const H = v => Math.round(num(v) * 100);
+  const totalH = ms.reduce((s,m)=> s + H(m.paid), 0);
+  const n = sharers.length;
+  const baseH = n ? Math.floor(totalH / n) : 0;
+  let remH = n ? totalH - baseH * n : 0;   // الهللات الزايدة توزع وحدة وحدة على أول الأعضاء
+  const rows = ms.map(m => {
+    const shareH = m.guest ? 0 : baseH + (remH-- > 0 ? 1 : 0);
+    return { id:m.id, name:m.name.trim(), paid:H(m.paid)/100, guest:!!m.guest,
+             share:shareH/100, balH:H(m.paid) - shareH };
+  });
+  rows.forEach(r => r.bal = r.balH / 100);
+  const s = settle(t); const transfers = []; let manager = null;
+  if (s.mode === 'manager'){
+    // الكل يحوّل للمدير، والمدير يرجّع للي لهم باقي
+    const mr = rows.find(r => r.id === s.manager); manager = mr.name;
+    rows.forEach(r => {
+      if (r.id === mr.id || r.balH === 0) return;
+      if (r.balH < 0) transfers.push({from:r.name, to:mr.name, amount:-r.balH/100});
+      else transfers.push({from:mr.name, to:r.name, amount:r.balH/100});
+    });
+    // التحويلات للمدير أولاً، بعدها اللي يرجّعها المدير
+    transfers.sort((a,b) => (b.to === mr.name) - (a.to === mr.name));
+  } else {
+    // تسوية مباشرة بأقل عدد تحويلات
+    const cred = rows.filter(r=>r.balH>0).map(r=>({name:r.name, h:r.balH})).sort((a,b)=>b.h-a.h);
+    const debt = rows.filter(r=>r.balH<0).map(r=>({name:r.name, h:-r.balH})).sort((a,b)=>b.h-a.h);
+    let i=0,j=0;
+    while(i<debt.length && j<cred.length){
+      const a = Math.min(debt[i].h, cred[j].h);
+      transfers.push({from:debt[i].name, to:cred[j].name, amount:a/100});
+      debt[i].h -= a; cred[j].h -= a;
+      if (debt[i].h === 0) i++; if (cred[j].h === 0) j++;
+    }
+  }
+  const total = totalH/100, share = n ? totalH/n/100 : 0;
+  return { total:r2(total), share:r2(share), count:sharers.length, guests:ms.length-sharers.length,
+           rows, transfers, mode:s.mode, manager, at:Date.now(), sig:sig(t) };
+}
+const isStale = t => t.result && t.result.sig !== sig(t);
+
+/* ---------- العرض ---------- */
+function render(){
+  const app = document.getElementById('app');
+  if (view.name === 'trip' && trip(view.id)) app.innerHTML = tripView(trip(view.id));
+  else { view = {name:'home', tab:view.tab||'active'}; app.innerHTML = homeView(); }
+}
+
+function homeView(){
+  const archived = view.tab === 'archive';
+  const list = state.trips.filter(t => !!t.archived === archived).sort((a,b)=> (b.date||'').localeCompare(a.date||'') || b.createdAt-a.createdAt);
+  const cards = list.map(t => {
+    const total = t.members.reduce((s,m)=>s+num(m.paid),0);
+    const st = !t.result ? '<span class="badge">لم تُحسب</span>' : isStale(t) ? '<span class="badge">تحتاج إعادة حساب</span>' : '<span class="badge ok">محسوبة</span>';
+    return `<div class="card trip" data-act="open" data-id="${t.id}">
+      <div><div class="name">${esc(t.name)}${st}</div>
+      <div class="muted">${esc(t.date||'')} · ${t.members.filter(m=>m.name.trim()&&!m.guest).length} أعضاء${(g=>g?` + ${g} ضيف`:'')(t.members.filter(m=>m.name.trim()&&m.guest).length)}</div></div>
+      <div class="amt">${money(total)}</div></div>`;
+  }).join('');
+  const empty = archived
+    ? `<div class="empty"><div class="big">🗂️</div>لا توجد طلعات مؤرشفة</div>`
+    : `<div class="empty"><div class="big">🧾</div>ما فيه طلعات حالياً<br>اضغط «طلعة جديدة» للبدء</div>`;
+  return `
+  <header class="top"><h1>القطّة</h1></header>
+  <div class="tabs">
+    <button class="${!archived?'on':''}" data-act="tab" data-tab="active">الطلعات</button>
+    <button class="${archived?'on':''}" data-act="tab" data-tab="archive">الأرشيف</button>
+  </div>
+  ${cards || empty}
+  <div class="foot">
+    <button class="btn ghost sm" data-act="export">نسخة احتياطية</button>
+    <button class="btn ghost sm" data-act="import">استرجاع نسخة</button>
+  </div>
+  ${!archived ? '<button class="btn fab" data-act="new">＋ طلعة جديدة</button>' : ''}`;
+}
+
+function tripView(t){
+  const rows = t.members.map(m => `
+    <div class="row ${m.guest?'is-guest':''}" data-mid="${m.id}">
+      <input class="n" data-field="name" value="${esc(m.name)}" placeholder="الاسم" autocomplete="off">
+      <input class="p" data-field="paid" value="${esc(m.paid)}" placeholder="0" inputmode="decimal" autocomplete="off">
+      <button class="gbtn ${m.guest?'on':''}" data-act="guest" data-mid="${m.id}">ضيف</button>
+      <button class="del" data-act="delm" data-mid="${m.id}" aria-label="حذف">×</button>
+    </div>`).join('');
+  const s = settle(t);
+  const named = t.members.filter(m => m.name.trim());
+  const settleCard = `
+  <div class="card">
+    <h2>طريقة التحويل</h2>
+    <label class="check"><input type="checkbox" data-sfield="mode" ${s.mode==='manager'?'checked':''}> الكل يحوّل لمدير القطّة</label>
+    ${s.mode==='manager' ? `
+      <div class="field"><label>مدير القطّة</label>
+        <select data-sfield="manager"><option value="">— اختر —</option>
+          ${named.map(m=>`<option value="${m.id}" ${m.id===s.manager?'selected':''}>${esc(m.name)}</option>`).join('')}
+        </select></div>
+      <p class="muted" style="margin:12px 0 0">طرق التحويل للمدير: عبّ وحدة أو أكثر، واترك الباقي فاضي. وإذا الشباب يعرفونها اتركها كلها فاضية.</p>
+      ${METHODS.map(m => `<div class="field"><label>${m.icon} ${m.label}</label>
+        <input data-sfield="${m.k}" value="${esc(s[m.k]||'')}" placeholder="${m.ph}" dir="ltr" inputmode="${m.im}" autocomplete="off" autocapitalize="characters"></div>`).join('')}`
+    : '<p class="muted" style="margin:8px 0 0">حالياً: كل واحد يحوّل مباشرة للي له فلوس، بأقل عدد تحويلات.</p>'}
+  </div>`;
+  return `
+  <header class="top">
+    <button class="icon-btn" data-act="back">‹ رجوع</button>
+    <span class="muted">${t.archived ? 'مؤرشفة' : ''}</span>
+  </header>
+  <div class="card">
+    <input class="title-in" data-tfield="name" value="${esc(t.name)}" placeholder="اسم الطلعة">
+    <div style="margin-top:10px"><input type="date" data-tfield="date" value="${esc(t.date||'')}"></div>
+  </div>
+  <div class="card">
+    <h2>الأعضاء والمدفوعات</h2>
+    ${t.members.length ? '<div class="cols"><span class="n">الاسم</span><span class="p">دفع من حسابه</span><span class="g">ضيف؟</span><span class="x"></span></div>' : '<p class="muted">أضف المشاركين، واكتب كم دفع كل واحد من حسابه (اتركه 0 إذا ما دفع شي). اضغط «ضيف» للي ما يدخل في القطّة.</p>'}
+    <div id="members">${rows}</div>
+    <form class="row" id="addForm" style="margin-top:6px">
+      <input id="newName" placeholder="اسم عضو جديد" autocomplete="off">
+      <button class="btn sm" type="submit" style="flex:none">إضافة</button>
+    </form>
+  </div>
+  ${settleCard}
+  <button class="btn block" data-act="calc" style="margin-bottom:12px;padding:15px;font-size:17px">${t.result ? 'إعادة حساب القطّة' : 'حساب القطّة'}</button>
+  <div id="result">${resultView(t)}</div>
+  <div class="actions" style="margin-top:4px">
+    <button class="btn ghost" data-act="archive">${t.archived ? 'إرجاع للطلعات' : 'أرشفة الطلعة'}</button>
+    <button class="btn danger" data-act="delete">حذف الطلعة</button>
+  </div>`;
+}
+
+function resultView(t){
+  const r = t.result; if (!r) return '';
+  const isMgr = r.mode === 'manager';
+  const rows = r.rows.map(x => {
+    const viaMgr = isMgr && x.name !== r.manager;
+    const pill = x.bal > 0.009 ? `<span class="pill plus">${viaMgr?'يرجّع له المدير':'يرجع له'} ${money(x.bal)}</span>`
+               : x.bal < -0.009 ? `<span class="pill minus">${viaMgr?'يحوّل للمدير':'عليه'} ${money(-x.bal)}</span>`
+               : x.guest ? `<span class="pill guest">ضيف</span>`
+               : `<span class="pill zero">مسدّد</span>`;
+    const tags = (x.guest ? '<span class="tag">ضيف</span>' : '') + (isMgr && x.name === r.manager ? '<span class="tag">المدير</span>' : '');
+    return `<div class="res"><div><b>${esc(x.name)}</b>${tags}<div class="muted">دفع ${money(x.paid)}</div></div>${pill}</div>`;
+  }).join('');
+  const accBox = isMgr ? methods(t).map(m => `<div class="muted">${m.icon} ${m.label}</div>
+    <div class="acc"><code>${esc(m.v)}</code><button class="btn ghost sm" data-act="copym" data-k="${m.k}">نسخ</button></div>`).join('') : '';
+  const tr = isMgr
+    ? (methods(t).length ? '' : `<div class="muted">طريقة التحويل عند ${esc(r.manager)}</div>`)
+    : (r.transfers.length
+    ? r.transfers.map(x=>`<div class="tr">💸 <b>${esc(x.from)}</b> يحوّل لـ <b>${esc(x.to)}</b>: ${money(x.amount)}</div>`).join('')
+    : '<div class="muted">ما فيه تحويلات، الكل متساوي ✅</div>');
+  return `
+  <div class="card res-card ${isStale(t)?'is-stale':''}">
+    ${isStale(t) ? '<div class="stale">⚠️ عدّلت البيانات بعد الحساب، اضغط «إعادة حساب القطّة»</div>' : ''}
+    <div class="body">
+      <h2>النتيجة</h2>
+      <div class="sum">
+        <div><span class="muted">الإجمالي</span><b>${fmt(r.total)}</b></div>
+        <div><span class="muted">الأعضاء${r.guests?` (+${r.guests} ضيف)`:''}</span><b>${r.count}</b></div>
+        <div><span class="muted">قطّة كل عضو</span><b>${fmt(r.share)}</b></div>
+      </div>
+      ${rows}
+    </div>
+  </div>
+  <div class="card res-card ${isStale(t)?'is-stale':''}"><div class="body">
+    <h2>${isMgr ? `التحويل لمدير القطّة: ${esc(r.manager)}` : 'التسوية المقترحة'}</h2>${accBox}${tr}
+    <button class="btn ghost block" data-act="share" style="margin-top:10px">مشاركة النتيجة (واتساب…)</button>
+  </div></div>`;
+}
+
+function shareText(t){
+  const r = t.result;
+  const isMgr = r.mode === 'manager';
+  const L = '━━━━━━━━━━━━';
+  let s = `🧾 *${t.name}*${t.date?'\n📅 '+t.date:''}\n${L}\n`;
+  s += `💰 الإجمالي: ${money(r.total)}\n👥 عدد الأعضاء: ${r.count}${r.guests?` (+${r.guests} ضيف)`:''}\n➗ قطّة كل عضو: ${money(r.share)}\n`;
+
+  s += `\n📋 *التفاصيل:*\n`;
+  r.rows.forEach(x => {
+    const tl = [x.guest && 'ضيف', isMgr && x.name===r.manager && 'المدير'].filter(Boolean);
+    const tag = tl.length ? ` (${tl.join('، ')})` : '';
+    const shareTxt = x.guest ? 'ما يدخل في القطّة' : `قطّته ${money(x.share ?? r.share)}`;
+    const viaMgr = isMgr && x.name !== r.manager;
+    const st = x.bal>0.009 ? `${viaMgr?'يرجّع له المدير':'يرجع له'} ${money(x.bal)} ✅`
+             : x.bal<-0.009 ? `${viaMgr?'يحوّل للمدير':'عليه'} ${money(-x.bal)} 🔴` : 'مسدّد ✔️';
+    s += `• ${x.name}${tag}: دفع ${money(x.paid)} – ${shareTxt} ← ${st}\n`;
+  });
+
+  if (isMgr){
+    s += `\n${L}\n👤 *التحويل على مدير القطّة: ${r.manager}*\n`;
+    const ms = methods(t);
+    if (ms.length) ms.forEach(m => s += `${m.icon} ${m.label}: ${m.v}\n`);
+    else s += `(طريقة التحويل عند ${r.manager})\n`;
+    if (ms.length > 1) s += `تقدر تحوّل بأي طريقة من اللي فوق\n`;
+  }
+
+  else {
+    s += `\n${L}\n💸 *مين يحوّل لمين:*\n`;
+    if (!r.transfers.length) s += 'ما فيه تحويلات، الكل متساوي ✅\n';
+    r.transfers.forEach((x,i) => { s += `${i+1}) ${x.from} ← ${x.to}: ${money(x.amount)}\n`; });
+  }
+  return s.trim();
+}
+
+function refreshResult(t){
+  const box = document.getElementById('result'); if (box) box.innerHTML = resultView(t);
+}
+
+/* ---------- الأحداث ---------- */
+document.addEventListener('click', async e => {
+  const el = e.target.closest('[data-act]'); if (!el) return;
+  const act = el.dataset.act; const t = view.id && trip(view.id);
+  if (act === 'tab'){ view.tab = el.dataset.tab; render(); }
+  else if (act === 'open'){ view = {name:'trip', id:el.dataset.id, tab:view.tab}; render(); scrollTo(0,0); }
+  else if (act === 'back'){ view = {name:'home', tab: t && t.archived ? 'archive' : 'active'}; render(); }
+  else if (act === 'new'){
+    const nt = { id:uid(), name:'طلعة جديدة', date:today(), members:[], result:null, archived:false, createdAt:Date.now() };
+    state.trips.push(nt); save(); view = {name:'trip', id:nt.id, tab:'active'}; render();
+    const ti = document.querySelector('.title-in'); ti.focus(); ti.select();
+  }
+  else if (act === 'delm'){
+    t.members = t.members.filter(m => m.id !== el.dataset.mid); save(); render();
+  }
+  else if (act === 'guest'){
+    const m = t.members.find(x => x.id === el.dataset.mid); m.guest = !m.guest; save(); render();
+  }
+  else if (act === 'copym'){
+    const m = METHODS.find(x => x.k === el.dataset.k);
+    try{ await navigator.clipboard.writeText((settle(t)[m.k]||'').trim()); toast(`نُسخ ${m.label}`); }catch(_){ toast('ما قدرت أنسخ'); }
+  }
+  else if (act === 'calc'){
+    const named = t.members.filter(m=>m.name.trim());
+    if (!named.length){ toast('أضف أعضاء أولاً'); return; }
+    if (!named.some(m=>!m.guest)){ toast('لازم عضو واحد على الأقل مو ضيف'); return; }
+    const s = settle(t);
+    if (s.mode === 'manager' && !named.some(m => m.id === s.manager)){ toast('اختر مدير القطّة أولاً'); return; }
+    t.result = calc(t); save(); render();
+    document.getElementById('result').scrollIntoView({behavior:'smooth', block:'start'});
+    toast('تم الحساب ✅');
+  }
+  else if (act === 'archive'){
+    t.archived = !t.archived; save();
+    toast(t.archived ? 'نُقلت للأرشيف' : 'رجعت للطلعات');
+    view = {name:'home', tab: t.archived ? 'archive' : 'active'}; render();
+  }
+  else if (act === 'delete'){
+    if (!confirm('حذف الطلعة نهائياً؟')) return;
+    state.trips = state.trips.filter(x => x.id !== t.id); save();
+    view = {name:'home', tab:view.tab}; render(); toast('تم الحذف');
+  }
+  else if (act === 'share'){
+    const text = shareText(t);
+    try{ if (navigator.share) await navigator.share({text}); else { await navigator.clipboard.writeText(text); toast('نُسخت النتيجة'); } }catch(_){}
+  }
+  else if (act === 'export'){
+    const blob = new Blob([JSON.stringify(state,null,2)], {type:'application/json'});
+    const name = `qatta-backup-${today()}.json`;
+    const file = new File([blob], name, {type:'application/json'});
+    try{
+      if (navigator.canShare && navigator.canShare({files:[file]})) await navigator.share({files:[file]});
+      else { const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; a.click(); }
+    }catch(_){}
+  }
+  else if (act === 'import'){ document.getElementById('importFile').click(); }
+});
+
+document.getElementById('importFile').addEventListener('change', async e => {
+  const f = e.target.files[0]; if (!f) return;
+  try{
+    const data = JSON.parse(await f.text());
+    if (!data || !Array.isArray(data.trips)) throw 0;
+    if (!confirm(`استرجاع ${data.trips.length} طلعة؟ سيتم دمجها مع الطلعات الحالية.`)) return;
+    const ids = new Set(state.trips.map(t=>t.id));
+    data.trips.forEach(t => { if (!ids.has(t.id)) state.trips.push(t); });
+    save(); render(); toast('تم الاسترجاع');
+  }catch(_){ toast('الملف غير صالح'); }
+  e.target.value = '';
+});
+
+document.addEventListener('change', e => {
+  const t = view.id && trip(view.id); if (!t) return;
+  const sf = e.target.dataset.sfield;
+  if (sf !== 'mode' && sf !== 'manager') return;
+  const s = settle(t);
+  if (sf === 'mode') s.mode = e.target.checked ? 'manager' : 'direct';
+  else s.manager = e.target.value;
+  save(); render();
+});
+
+document.addEventListener('input', e => {
+  const t = view.id && trip(view.id); if (!t) return;
+  const sf = e.target.dataset.sfield;
+  if (METHODS.some(m => m.k === sf)){ settle(t)[sf] = e.target.value; save(); if (t.result) refreshResult(t); return; }
+  if (sf) return;
+  const tf = e.target.dataset.tfield;
+  if (tf){ t[tf] = e.target.value; save(); return; }
+  const f = e.target.dataset.field; if (!f) return;
+  const m = t.members.find(x => x.id === e.target.closest('[data-mid]').dataset.mid);
+  m[f] = e.target.value; save();
+  if (f === 'name'){ const o = document.querySelector(`select[data-sfield="manager"] option[value="${m.id}"]`); if (o) o.textContent = m.name; }
+  if (t.result){
+    const card = document.querySelectorAll('.res-card');
+    const stale = isStale(t);
+    if (stale !== card[0].classList.contains('is-stale')) refreshResult(t);
+  }
+});
+
+document.addEventListener('submit', e => {
+  if (e.target.id !== 'addForm') return;
+  e.preventDefault();
+  const t = trip(view.id); const inp = document.getElementById('newName');
+  const names = inp.value.split(/[،,\n]/).map(s=>s.trim()).filter(Boolean);
+  if (!names.length) return;
+  names.forEach(n => t.members.push({id:uid(), name:n, paid:''}));
+  save(); render();
+  document.getElementById('newName').focus();
+});
+
+render();
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
