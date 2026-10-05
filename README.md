@@ -21,7 +21,7 @@
 <br>
 
 <p align="center">
-  <a href="https://USERNAME.github.io/qatta/">
+  <a href="https://xTurki.github.io/qatta/">
     <img alt="افتح التطبيق" src="https://img.shields.io/badge/📲%20%20افتح%20التطبيق-0f766e?style=for-the-badge" height="48">
   </a>
 </p>
